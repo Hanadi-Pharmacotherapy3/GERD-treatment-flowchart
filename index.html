@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Gastro-oesophageal reflux disease (GERD) treatment flowchart</title>
+  <style>
+    :root {
+      /* Section colours */
+      --s1: #0070C0; --s1-tint: #e5f1fa; --s1-dark: #00508a;
+      --s2: #009999; --s2-tint: #e0f4f4; --s2-dark: #006666;
+      --s3: #590079; --s3-tint: #f3e7f7; --s3-dark: #590079;
+
+      /* Step-type colours */
+      --start: #455a64;  --start-bg: #eef2f4;  --start-soft: #b9c7ce;  --start-dark: #263238;
+      --treat: #3949ab;  --treat-bg: #eceefb;  --treat-soft: #b3bbe8;  --treat-dark: #283593;
+      --decide: #c99700; --decide-bg: #fff8db; --decide-soft: #ecd27a; --decide-dark: #6e5000;
+      --good: #2e7d32;   --good-bg: #e9f6ea;   --good-soft: #a9d8ab;   --good-dark: #1b5e20;
+      --bad: #c62828;    --bad-bg: #fdecec;    --bad-soft: #f0aaaa;    --bad-dark: #8e1c1c;
+      --warn: #c2185b;   --warn-bg: #fdebf3;   --warn-soft: #f1a7c6;   --warn-dark: #880e4f;
+      --freq: #e65100;   --freq-dark: #a33a00;
+      --info: #0288d1;   --info-bg: #e6f4fb;   --info-soft: #9fd3ee;   --info-dark: #01579b;
+
+      --text: #000000;
+      --line: #d3e0e8;
+      --font-scale: 1;
+    }
+    * { box-sizing: border-box; }
+    html { font-family: Calibri, Carlito, 'Segoe UI', Arial, sans-serif; font-size: calc(16px * var(--font-scale)); }
+    body { margin: 0; color: var(--text); background: #ffffff; font-size: 1rem; line-height: 1.45; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .page { max-width: 1460px; padding: 1.6rem 1.7rem 3rem; margin: 0 auto; }
+
+    /* Masthead */
+    .top { display: flex; gap: 1.1rem; align-items: center; justify-content: center; margin-bottom: 1rem; }
+    .emblem { height: 4.2rem; width: 4.2rem; border-radius: 50%; display:flex; justify-content:center; align-items:center; flex: 0 0 auto; }
+    .emblem--left { background: var(--s1-tint); color: var(--s1); }
+    .emblem--right { background: var(--s3-tint); color: var(--s3); }
+    .emblem svg { width: 2.8rem; height: 2.8rem; }
+    .masthead { background: #ffffff; text-align: center; padding: .2rem 1.5rem .7rem; border-bottom: 6px solid; border-image: linear-gradient(90deg, var(--s1), var(--s2), var(--s3)) 1; }
+    h1 { margin:0; font-size: 48pt; line-height: 1.1; font-weight: 700; color: #0070C0; }
+    .subtitle { margin-top: .35rem; font-size: 16pt; line-height: 1.2; font-weight: 700; color: #000000; }
+
+    /* Tools */
+    .tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .8rem 1rem; margin: 1.15rem 0 .9rem; padding: .75rem 1rem; border: 1px solid var(--line); border-radius: .9rem; background: #fff; box-shadow: 0 2px 8px #164d7110; }
+    .tools .controls { display: flex; align-items:center; flex-wrap:wrap; gap: .55rem; }
+    .tools label { font-size:.93rem; font-weight: 700; color:#0070C0; }
+    input[type=range] { width: 175px; accent-color: #0070C0; }
+    .small-button { min-width:2.2rem; padding:.3rem .68rem; border:1px solid #b3ccde; border-radius:.5rem; background:#f2f8fc; color:#0070C0; font-weight:700; }
+    .small-button:hover { background:#dceef9; }
+    .print-button { color: white; background: #0070C0; border-color:#0070C0; }
+    .print-button:hover { background:#005A9C; }
+    #scaleText { color:#0070C0; font-weight:700; min-width: 3.8rem; font-variant-numeric:tabular-nums; text-align:center; }
+    .hint { font-size:.86rem; color:#000000; }
+
+    /* Colour key */
+    .legend { border: 1px solid var(--line); border-radius: .9rem; background: #fff; padding: .8rem 1rem; margin: 0 0 1.2rem; box-shadow: 0 2px 8px #164d7110; }
+    .legend-row { display: flex; flex-wrap: wrap; align-items: center; gap: .55rem 1.1rem; }
+    .legend-row + .legend-row { margin-top: .6rem; padding-top: .6rem; border-top: 1px dashed var(--line); }
+    .legend-title { font-weight: 700; font-size: .95rem; min-width: 6.5rem; }
+    .key { display: inline-flex; align-items: center; gap: .4rem; font-size: .92rem; }
+    .key-badge { display:inline-flex; align-items:center; justify-content:center; min-width: 1.45rem; height: 1.45rem; padding: 0 .3rem; border-radius: 999px; color: #fff; font-size: .74rem; font-weight: 700; line-height: 1; }
+    .key-swatch { width: 1.45rem; height: 1.45rem; border-radius: .35rem; }
+
+    /* Sections */
+    .section { --sec: var(--s1); --sec-tint: var(--s1-tint); --sec-dark: var(--s1-dark);
+      border: 2px solid var(--sec); border-radius: 1.05rem; background: white; overflow: hidden; box-shadow: 0 4px 18px #164a7111; margin: 1.1rem 0; break-inside: avoid; }
+    .section--s2 { --sec: var(--s2); --sec-tint: var(--s2-tint); --sec-dark: var(--s2-dark); }
+    .section--s3 { --sec: var(--s3); --sec-tint: var(--s3-tint); --sec-dark: var(--s3-dark); }
+    .section > h2 { color: white; background: var(--sec); padding:.68rem 1.15rem; margin: 0; font-size:1.33rem; font-weight:700; line-height:1.25; }
+    .section-content { padding: 1.35rem 1.2rem 1.35rem; }
+    h3 { margin: .15rem 0 1rem; font-size: 1.17rem; font-weight:700; color: var(--sec-dark); background: var(--sec-tint); border: 3px solid var(--sec); display:table; padding:.24rem .9rem; border-radius: .45rem; }
+    h3:not(:first-child) { margin-top: 1.7rem; }
+
+    /* Nodes: colour coded by step type */
+    .node { --c: var(--start); --c-bg: var(--start-bg); --c-soft: var(--start-soft); --c-dark: var(--start-dark);
+      position: relative; border:3px solid var(--c); background: var(--c-bg);
+      border-radius:.82rem; padding: .95rem 2rem .95rem .95rem; min-width: 0; flex: 1 1 0; font-size: .99rem; color:#000; box-shadow:0 2px 4px #1a51700c; }
+    .node::before { position:absolute; top:-.72rem; right:.7rem; display:flex; align-items:center; justify-content:center; min-width:1.45rem; height:1.45rem; padding:0 .3rem; border-radius:999px; background: var(--c); color:#fff; font-size:.74rem; font-weight:700; line-height:1; box-shadow: 0 0 0 2px #fff; }
+    .node strong { display:block; font-size:1.06rem; color: var(--c-dark); line-height:1.3; font-weight:700; }
+    .node p { margin: .33rem 0 0; }
+    .node ul { margin: .4rem 0 0; padding-left: 1.3rem; }
+    .node li { margin: .14rem 0; }
+    .node li::marker { color: var(--c); }
+
+    .node--start  { --c: var(--start);  --c-bg: var(--start-bg);  --c-soft: var(--start-soft);  --c-dark: var(--start-dark); }
+    .node--treat  { --c: var(--treat);  --c-bg: var(--treat-bg);  --c-soft: var(--treat-soft);  --c-dark: var(--treat-dark); }
+    .node--decide { --c: var(--decide); --c-bg: var(--decide-bg); --c-soft: var(--decide-soft); --c-dark: var(--decide-dark); }
+    .node--good   { --c: var(--good);   --c-bg: var(--good-bg);   --c-soft: var(--good-soft);   --c-dark: var(--good-dark); }
+    .node--bad    { --c: var(--bad);    --c-bg: var(--bad-bg);    --c-soft: var(--bad-soft);    --c-dark: var(--bad-dark); }
+    .node--warn   { --c: var(--warn);   --c-bg: var(--warn-bg);   --c-soft: var(--warn-soft);   --c-dark: var(--warn-dark); }
+    .node--info   { --c: var(--info);   --c-bg: var(--info-bg);   --c-soft: var(--info-soft);   --c-dark: var(--info-dark); }
+    .node--start::before  { content: '●'; }
+    .node--treat::before  { content: 'Rx'; }
+    .node--decide::before { content: '?'; }
+    .node--good::before   { content: '✓'; }
+    .node--bad::before    { content: '↑'; }
+    .node--warn::before   { content: '!'; }
+    .node--info::before   { content: 'i'; }
+    .node--decide { border-style: dashed; }
+
+    .flow-line { display:flex; align-items:stretch; gap:.55rem; width:100%; }
+    .flow-line > .node { align-content:center; }
+    .arrow { display:flex; flex: 0 0 1.55rem; align-self:center; justify-content:center; align-items:center; color: var(--sec); font-weight:800; font-size:1.68rem; line-height:1; }
+
+    /* Severity lanes */
+    .lanes { display:grid; gap:1rem; }
+    .lane { display:grid; grid-template-columns: minmax(115px, .75fr) minmax(0,3.25fr); gap:.8rem; align-items:center; padding: 1rem .8rem .8rem; border: 1.5px solid var(--line); border-radius:.9rem; background: #fff; }
+    .lane--mild { border-color: var(--good-soft); background: #f7fcf7; }
+    .lane--frequent { border-color: #f7c08f; background: #fffaf4; }
+    .lane-label { padding:.68rem .5rem; font-size:.94rem; font-weight:700; border-radius:.6rem; text-align:center; line-height:1.25; }
+    .lane-label--mild { color: var(--good-dark); background: #dcf1de; border: 3px solid var(--good); }
+    .lane-label--frequent { color: var(--freq-dark); background: #ffe6cf; border: 3px solid var(--freq); }
+    .eyebrow { font-size: .8rem; line-height:1.3; font-weight:700; text-transform:uppercase; letter-spacing: .055em; color: var(--c-dark); margin-bottom:.25rem; }
+
+    /* Yes / no branches */
+    .outcomes { display:grid; grid-template-columns:1fr 1fr; gap:.8rem; margin-top:1rem; }
+    .lane > .outcomes { grid-column:2; margin-top:.2rem; }
+    .outcome { display:flex; align-items:stretch; gap:.6rem; }
+    .branch-label { align-self:center; border-radius:.4rem; padding: .26rem .6rem; font-weight:700; font-size:.88rem; white-space:nowrap; color:#fff; }
+    .yes { background: var(--good); }
+    .no { background: var(--bad); }
+
+    /* Notes */
+    .note { border-radius:.72rem; padding:.75rem .9rem; background: var(--info-bg); border:3px solid var(--info); color:#000; margin-top:.85rem; }
+    .note strong { color: var(--info-dark); }
+    .note--good { background: var(--good-bg); border-color: var(--good); }
+    .note--good strong { color: var(--good-dark); }
+    .note--warn { background: var(--warn-bg); border-color: var(--warn); }
+    .note--warn strong { color: var(--warn-dark); }
+
+    .panel-grid { display:grid; grid-template-columns: 1.05fr 1fr; gap:1rem; margin-top: 1.2rem; }
+    .panel-grid .node { height:100%; }
+    .callout { font-size: .91rem; }
+    .ext-link { color: var(--c-dark); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 2px; }
+    .jump { color: var(--c-dark, #0070C0); text-decoration: underline dotted; text-decoration-thickness: 2px; text-underline-offset: 3px; cursor: pointer; }
+    .note .jump { color: inherit; }
+    .jump:hover { color: var(--c, #0070C0); text-decoration-style: solid; }
+    .jump::after { content: ' ↘'; font-size: .8em; font-weight: 700; }
+    .jump-target { scroll-margin: 6rem; }
+    .flash { animation: flash 2.2s ease-out; }
+    @keyframes flash {
+      0%, 35% { outline: 4px solid #c99700; outline-offset: 5px; box-shadow: 0 0 0 10px #ffe58a; }
+      100% { outline: 4px solid transparent; outline-offset: 5px; box-shadow: 0 0 0 10px transparent; }
+    }
+    .back-button { position: fixed; right: 1.2rem; bottom: 1.2rem; z-index: 50; display: none; align-items: center; gap: .4rem; padding: .6rem 1rem; border: 0; border-radius: 999px; background: #0070C0; color: #fff; font-weight: 700; box-shadow: 0 4px 14px #00000033; }
+    .back-button.show { display: inline-flex; }
+    .back-button:hover { background: #005A9C; }
+    .ext-link:hover { color: var(--c); background: #fff; border-radius: .2rem; }
+    .three { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:.8rem; }
+    .three .node { height:100%; }
+
+    /* Symptom-pattern tags */
+    .tag { display:inline-block; margin:.1rem 0 .35rem; padding:.17rem .55rem; border-radius: .4rem; font-size:.83rem; font-weight:700; color:#fff; }
+    .tag--night { background:#1a237e; }
+    .tag--meal { background:#bf5b00; }
+    .tag--regurg { background:#5d4037; }
+
+    .mini-flow { display:grid; grid-template-columns:1fr auto 1fr auto 1fr; gap:.45rem; align-items:stretch; }
+    .mini-flow > .node { height:100%; }
+    .list-cols { columns:2; column-gap:1rem; }
+    .list-cols li { break-inside:avoid; }
+    .alarm-list { columns:3; column-gap:1.5rem; margin:.5rem 0 0; padding-left:1.5rem; }
+    .alarm-list li { break-inside:avoid; font-weight:600; }
+    .alarm-list li::marker { font-weight:700; }
+    .summary { display:flex; gap:.8rem; align-items:center; border:2px solid var(--good); border-radius: 1rem; background: var(--good-bg); padding:1rem 1.25rem; margin-top:1rem; }
+    .summary svg { color: var(--good); width:2.3rem; height:2.3rem; flex: 0 0 auto; }
+    .summary strong { color: var(--good-dark); font-size:1.12rem; }
+    .summary p { margin:.15rem 0 0; }
+
+    @media (max-width:1000px) {
+      .page { padding: 1.15rem 1rem 2rem; }
+      .panel-grid { grid-template-columns:1fr; }
+      .mini-flow { grid-template-columns:1fr; }
+      .mini-flow > .arrow { transform:rotate(90deg); }
+      .three { grid-template-columns:1fr; }
+      h1 { font-size: 36pt; }
+    }
+    @media (max-width:690px) {
+      .top { gap:.5rem; }
+      .emblem { width:2.75rem; height:2.75rem; }
+      .emblem svg { width:1.9rem; height:1.9rem; }
+      .masthead { flex:1; padding:.2rem .5rem .6rem; }
+      h1 { font-size: 24pt; }
+      .subtitle { font-size: 13pt; }
+      .tools { justify-content:center; }
+      .tools .hint { text-align:center; }
+      .section-content { padding: 1.1rem .9rem; }
+      .flow-line { flex-direction:column; gap: 1rem; }
+      .arrow { transform:rotate(90deg); align-self:center; min-height:1.3rem; }
+      .lane { grid-template-columns:1fr; }
+      .lane > .outcomes { grid-column:1; }
+      .outcomes { grid-template-columns:1fr; }
+      .list-cols, .alarm-list { columns:1; }
+    }
+    @page { size: A4; margin: 12mm; }
+    @media print {
+      html { font-size: 11px !important; }
+      body { background:white; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+      .page { padding:0; max-width:none; }
+      .tools, .back-button { display:none!important; }
+      .jump::after { content: ''; }
+      .emblem { display:none; }
+      .legend { box-shadow:none; }
+      .section { box-shadow:none; break-inside: auto; margin:.8rem 0; }
+      .section > h2 { break-after:avoid; }
+      .node, .lane, .outcome, .note, h3, .summary, .legend { break-inside:avoid; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <header class="top">
+    <div class="emblem emblem--left" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7v17c0 8 8 12 13 10 3-1 7-6 9-5 7 4 10 12 8 19-2 7-8 11-17 11-14 0-24-11-24-24V7"/><path d="M25 7v17c0 5 5 7 8 5"/><path d="M16 42c8 8 18 9 25 4" stroke="#e65100"/></svg></div>
+    <div class="masthead"><h1>Gastro-oesophageal reflux disease (GERD) treatment flowchart</h1><div class="subtitle">Dr Hanadi Al Shaker</div></div>
+    <div class="emblem emblem--right" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="12" y="9" width="38" height="48" rx="5"/><rect x="23" y="5" width="16" height="10" rx="3" fill="#f3e7f7"/><path d="m19 27 3 3 5-6M31 27h12M19 39l3 3 5-6M31 39h12" stroke="#2e7d32"/></svg></div>
+  </header>
+
+  <nav class="tools" aria-label="Display controls">
+    <div class="controls">
+      <label for="fontSize">Font size</label>
+      <button class="small-button" type="button" id="decrease" aria-label="Decrease font size">−</button>
+      <input type="range" id="fontSize" min="85" max="150" step="5" value="100" aria-label="Font size percentage">
+      <button class="small-button" type="button" id="increase" aria-label="Increase font size">+</button>
+      <output id="scaleText" for="fontSize">100%</output>
+      <button class="small-button" type="button" id="reset">Reset</button>
+    </div>
+    <div class="controls">
+      <span class="hint">Text remains selectable and resizes throughout the flowchart.</span>
+      <button class="small-button print-button" type="button" id="print">Print / Save PDF</button>
+    </div>
+  </nav>
+
+  <aside class="legend" aria-label="Colour key">
+    <div class="legend-row">
+      <span class="legend-title">Step type</span>
+      <span class="key"><span class="key-badge" style="background:var(--start)">●</span>Presentation or symptoms</span>
+      <span class="key"><span class="key-badge" style="background:var(--treat)">Rx</span>Treatment step</span>
+      <span class="key"><span class="key-badge" style="background:var(--decide)">?</span>Decision or reassessment</span>
+      <span class="key"><span class="key-badge" style="background:var(--good)">✓</span>Favourable outcome</span>
+      <span class="key"><span class="key-badge" style="background:var(--bad)">↑</span>Escalate or investigate</span>
+      <span class="key"><span class="key-badge" style="background:var(--warn)">!</span>Caution</span>
+      <span class="key"><span class="key-badge" style="background:var(--info)">i</span>Indications and information</span>
+    </div>
+    <div class="legend-row">
+      <span class="legend-title">Section</span>
+      <span class="key"><span class="key-swatch" style="background:var(--s1)"></span>1. Initial therapy</span>
+      <span class="key"><span class="key-swatch" style="background:var(--s2)"></span>2. Provider-directed therapy</span>
+      <span class="key"><span class="key-swatch" style="background:var(--s3)"></span>3. Maintenance therapy</span>
+      <span class="legend-title" style="margin-left:.6rem">Severity</span>
+      <span class="key"><span class="key-swatch" style="background:var(--good)"></span>Mild</span>
+      <span class="key"><span class="key-swatch" style="background:var(--freq)"></span>Frequent</span>
+    </div>
+  </aside>
+
+  <main>
+    <section class="section section--s1 jump-target" id="sec-initial" aria-labelledby="initial-heading">
+      <h2 id="initial-heading">1. Initial therapy of GERD</h2>
+      <div class="section-content">
+        <h3>A. Self-directed therapy</h3>
+        <div class="lanes">
+          <div class="lane lane--mild">
+            <div class="lane-label lane-label--mild">Mild, typical heartburn<br>Fewer than 2 times/week</div>
+            <div class="flow-line">
+              <div class="node node--start"><div class="eyebrow">Symptoms</div><strong>Occasional heartburn</strong><p>Typical, mild symptoms without warning signs.</p></div>
+              <span class="arrow" aria-hidden="true">→</span>
+              <div class="node node--treat"><strong>On-demand self-care</strong><p>Take treatment only when needed.</p></div>
+              <span class="arrow" aria-hidden="true">→</span>
+              <div class="node node--treat"><strong>Choose an over-the-counter (OTC) option</strong><ul><li>Antacids</li><li>Alginic acid</li><li>Histamine-2 (H₂) receptor antagonists</li></ul></div>
+            </div>
+          </div>
+          <div class="lane lane--frequent">
+            <div class="lane-label lane-label--frequent">Frequent heartburn<br>At least 2 times/week</div>
+            <div class="flow-line">
+              <div class="node node--start"><div class="eyebrow">Symptoms</div><strong>Heartburn ≥ 2 times/week</strong><p>Consider a short OTC proton pump inhibitor (PPI) course.</p></div>
+              <span class="arrow" aria-hidden="true">→</span>
+              <div class="node node--treat"><strong>OTC PPI for up to 2 weeks</strong><p>Follow the product instructions and use the recommended course.</p></div>
+              <span class="arrow" aria-hidden="true">→</span>
+              <div class="node node--decide"><strong>Assess after the 2-week course</strong><p>Did symptoms resolve?</p></div>
+            </div>
+            <div class="outcomes">
+              <div class="outcome"><span class="branch-label yes">Yes</span><div class="node node--good"><strong>Symptom control achieved</strong><p>Reassess if symptoms return or become frequent.</p></div></div>
+              <div class="outcome"><span class="branch-label no">No</span><div class="node node--bad"><strong><a class="jump" href="#sec-provider">Provider evaluation</a> needed</strong><p>Do not keep repeating OTC PPI courses without assessment.</p></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="note"><strong>Note:</strong> Symptom response to an empirical PPI trial may guide initial symptom control, but is not sensitive or specific enough to confirm GERD. <a class="jump" href="#alarm-box">Alarm symptoms</a> require clinical assessment.</div>
+        <div class="node node--bad jump-target" id="alarm-box" style="margin-top:1.3rem">
+          <strong>What are alarm symptoms?</strong>
+          <p>Alarm symptoms may be indicative of other conditions that warrant further diagnostic workup, such as <a class="ext-link" href="https://my.clevelandclinic.org/health/diseases/21456-esophageal-strictures#:~:text=An%20esophageal%20stricture%20is%20an,can%20cause%20difficulty%20swallowing." target="_blank" rel="noopener noreferrer">oesophageal strictures</a> or oesophageal adenocarcinoma:</p>
+          <ol class="alarm-list">
+            <li><a class="ext-link" href="https://www.nhs.uk/symptoms/swallowing-problems-dysphagia/#:~:text=Dysphagia%20(swallowing%20problems),after%20eating%20or%20drinking" target="_blank" rel="noopener noreferrer">Dysphagia</a> (difficult swallowing)</li>
+            <li>Odynophagia (painful swallowing)</li>
+            <li>Unexplained weight loss</li>
+            <li>Gastrointestinal (GI) bleeding</li>
+            <li>Vomiting</li>
+            <li>Anaemia</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--s2 jump-target" id="sec-provider" aria-labelledby="provider-heading">
+      <h2 id="provider-heading">2. Provider-directed therapy</h2>
+      <div class="section-content">
+        <div class="flow-line">
+          <div class="node node--start"><div class="eyebrow">Presentation</div><strong>Classic GERD symptoms</strong><p>Heartburn and/or regurgitation. Review <a class="jump" href="#sec-initial">prior OTC treatment</a>.</p></div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <div class="node node--decide jump-target" id="node-alarm"><strong>No alarm symptoms?</strong><p>If <a class="jump" href="#alarm-box">alarm symptoms</a> are present, investigate rather than relying on an empirical PPI trial.</p></div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <div class="node node--treat"><div class="eyebrow">If yes</div><strong>Once-daily PPI for 8 weeks</strong><p>For most standard PPIs, take 30–60 minutes before a meal.</p></div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <div class="node node--decide"><strong>Review response at 8 weeks</strong><p>Is symptom control adequate?</p></div>
+        </div>
+
+        <div class="outcomes">
+          <div class="outcome"><span class="branch-label yes">Yes</span><div class="node node--good"><strong>Attempt <a class="jump" href="#deprescribing">PPI discontinuation</a></strong><p>Only if there is no <a class="jump" href="#node-maint-indications">indication for maintenance therapy</a>.</p></div></div>
+          <div class="outcome"><span class="branch-label no">No</span><div class="node node--bad"><strong>Optimise PPI treatment</strong><p>Check adherence, timing and diagnosis; then consider <a class="jump" href="#node-twice-daily">twice-daily PPI</a>.</p></div></div>
+        </div>
+        <div class="flow-line" style="margin-top:1.2rem">
+          <div class="node node--treat jump-target" id="node-twice-daily"><div class="eyebrow">If inadequate response</div><strong>Twice-daily PPI</strong><p>Continue for 8–12 weeks, with appropriate administration.</p></div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <div class="node node--decide"><strong>Reassess after 8–12 weeks</strong><p>Has treatment produced an adequate response?</p></div>
+        </div>
+        <div class="outcomes">
+          <div class="outcome"><span class="branch-label yes">Yes</span><div class="node node--good"><strong>Individualise maintenance</strong><p>Use the lowest effective PPI dose and schedule when <a class="jump" href="#node-indications-list">ongoing therapy is indicated</a>.</p></div></div>
+          <div class="outcome"><span class="branch-label no">No</span><div class="node node--bad"><strong>Investigate <a class="jump" href="#sub-refractory">refractory symptoms</a></strong><p>Further workup may include <a class="jump" href="#node-ee">endoscopy</a> and reflux testing.</p></div></div>
+        </div>
+
+        <div class="panel-grid">
+          <div class="node node--treat jump-target" id="node-ee">
+            <strong>If endoscopy shows erosive oesophagitis (EE)</strong>
+            <ul>
+              <li>Treat with a PPI for 8 weeks, at a standard dose or up to twice daily as clinically indicated.</li>
+              <li>For <a class="ext-link" href="https://cardvasc.org/docs/tools/calculators/la-grading-esophagitis#:~:text=Reset-,Endoscopic%20finding,-Grade%20A%20%E2%80%94%20one" target="_blank" rel="noopener noreferrer"><b>Los Angeles (LA) grade C or D</b></a>, long-term <a class="jump" href="#node-maint-indications">maintenance PPI</a> or anti-reflux surgery may be needed.</li>
+              <li>Use the lowest effective dose for maintenance.</li>
+            </ul>
+          </div>
+          <div class="node node--warn">
+            <strong>Important: avoid unnecessary dose escalation</strong>
+            <ul>
+              <li>Confirm adherence and correct PPI administration.</li>
+              <li>Review whether the symptoms are acid-related.</li>
+              <li>Consider <a class="jump" href="#alarm-box">alarm symptoms</a>, complications and alternative diagnoses.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--s3" aria-labelledby="maintenance-heading">
+      <h2 id="maintenance-heading">3. Maintenance GERD therapy</h2>
+      <div class="section-content">
+        <h3>A. Who needs maintenance PPI?</h3>
+        <div class="flow-line">
+          <div class="node node--start"><strong>Patients with GERD complications</strong><p>Maintenance treatment helps prevent recurrence and complications.</p></div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <div class="node node--info jump-target" id="node-maint-indications"><strong>Typical indications</strong><ul><li>Severe EE (LA grade C or D)</li><li>Barrett’s oesophagus (BE)</li></ul></div>
+          <span class="arrow" aria-hidden="true">/</span>
+          <div class="node node--treat"><strong>Without EE or BE</strong><p>When symptoms recur after stopping PPIs, <a class="jump" href="#on-demand">on-demand therapy</a> may be suitable.</p></div>
+        </div>
+
+        <h3>B. Treatment of refractory symptoms</h3>
+        <div class="note" style="margin-top:0; margin-bottom:1.1rem"><strong>Principle:</strong> Do not routinely add medicines to PPIs. Choose an adjunct according to the symptom pattern and evidence of reflux.</div>
+        <div class="three jump-target" id="sub-refractory">
+          <div class="node node--treat"><span class="tag tag--night">Nocturnal symptoms</span><strong>Bedtime H₂ receptor antagonist</strong><p>May help selected patients with nighttime symptoms.</p><p><b style="color:var(--warn-dark)">Caution:</b> Tachyphylaxis can develop with continuous use.</p></div>
+          <div class="node node--treat"><span class="tag tag--meal">After meals</span><strong>Alginic acid</strong><p>May reduce postprandial breakthrough reflux symptoms.</p></div>
+          <div class="node node--treat"><span class="tag tag--regurg">Regurgitation and belching</span><strong>Baclofen</strong><p>May help selected patients; adverse effects and limited evidence restrict routine use.</p></div>
+        </div>
+
+        <h3>C. On-demand PPI use</h3>
+        <div class="mini-flow jump-target" id="on-demand">
+          <div class="node node--treat"><strong>Take PPI when symptoms recur</strong><p>Continue during symptomatic periods, then stop after symptoms resolve.</p></div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <div class="node node--good"><strong>Best candidates: non-erosive reflux disease (NERD)</strong><p>Patients without complications requiring continuous therapy.</p></div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <div class="node node--warn"><strong>Do not replace <a class="jump" href="#node-maint-indications">required maintenance</a></strong><p>Not appropriate for BE or severe EE requiring long-term acid suppression.</p></div>
+        </div>
+        <div class="note note--good"><strong>Potential benefits:</strong> On-demand use may reduce total PPI exposure by approximately 60–80%. More than 80% of patients were willing to continue this approach.</div>
+
+        <h3>D. Deprescribing considerations</h3>
+        <div class="flow-line jump-target" id="deprescribing">
+          <div class="node node--decide"><strong>Review PPI use after 8–12 weeks</strong><p>Does the patient still need long-term acid suppression?</p></div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <div class="node node--decide"><strong><a class="jump" href="#node-indications-list">Clear indication</a> to continue?</strong><p>Assess complications and risk factors before deprescribing.</p></div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <div class="node node--good"><strong>Yes: maintain when indicated</strong><p>Continue at the lowest effective dose and appropriate schedule.</p></div>
+        </div>
+        <div class="panel-grid">
+          <div class="node node--info jump-target" id="node-indications-list">
+            <strong>Examples of indications for ongoing therapy</strong>
+            <ul class="list-cols">
+              <li>BE</li>
+              <li>Severe EE (LA grade C or D)</li>
+              <li>Oesophageal ulcer</li>
+              <li>Peptic stricture</li>
+              <li>Eosinophilic oesophagitis, when prescribed as treatment</li>
+              <li>High risk of upper GI bleeding</li>
+            </ul>
+            <p class="callout"><b style="color:var(--warn-dark)">Important qualification:</b> Idiopathic pulmonary fibrosis alone is not a reason to prescribe a PPI solely for respiratory benefit.</p>
+          </div>
+          <div class="node node--warn">
+            <strong>No ongoing indication: <a class="jump" href="#node-discontinuation">consider stopping</a></strong>
+            <p>Discuss <b>rebound acid hypersecretion (RAHS)</b>. It may occur after approximately 2 months of continuous PPI treatment.</p>
+            <p>If severe symptoms persist for more than 2 months after stopping, reassess for ongoing GERD or a non-acid cause.</p>
+          </div>
+        </div>
+        <div class="flow-line" style="margin-top:1.2rem">
+          <div class="node node--treat jump-target" id="node-discontinuation"><strong>Discontinuation strategy</strong><p>Either gradual dose tapering or abrupt discontinuation may be reasonable. Tailor the approach to the patient.</p></div>
+          <span class="arrow" aria-hidden="true">→</span>
+          <div class="node node--treat"><strong>Manage breakthrough symptoms</strong><p>Use <a class="jump" href="#on-demand">on-demand PPIs</a>, H₂ receptor antagonists or antacids when appropriate.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="summary">
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="24" r="19"/><circle cx="24" cy="24" r="10"/><path d="m18 24 5 5 11-12"/></svg>
+      <div><strong>Quick summary</strong><p>Start with the least intensive therapy for mild symptoms. Escalate according to frequency and response, use the lowest effective PPI dose, and regularly reassess the <a class="jump" href="#deprescribing">need for long-term treatment</a>.</p></div>
+    </div>
+  </main>
+  <button type="button" class="back-button" id="backButton">↩ Back to where you were</button>
+
+</div>
+<script>
+(function () {
+  'use strict';
+  const slider = document.getElementById('fontSize');
+  const label = document.getElementById('scaleText');
+  const min = Number(slider.min), max = Number(slider.max), step = Number(slider.step);
+  function setScale(value) {
+    const next = Math.max(min, Math.min(max, Math.round(value / step) * step));
+    slider.value = String(next);
+    label.textContent = next + '%';
+    document.documentElement.style.setProperty('--font-scale', String(next / 100));
+    try { localStorage.setItem('gerd-flowchart-font-scale', String(next)); } catch (e) { /* storage may be disabled */ }
+  }
+  try {
+    const stored = Number(localStorage.getItem('gerd-flowchart-font-scale'));
+    if (stored >= min && stored <= max) setScale(stored);
+  } catch (e) { /* storage may be disabled */ }
+  slider.addEventListener('input', () => setScale(Number(slider.value)));
+  document.getElementById('increase').addEventListener('click', () => setScale(Number(slider.value) + step));
+  document.getElementById('decrease').addEventListener('click', () => setScale(Number(slider.value) - step));
+  document.getElementById('reset').addEventListener('click', () => setScale(100));
+  document.getElementById('print').addEventListener('click', () => window.print());
+
+  // Internal jump links: smooth scroll, highlight the target, offer a way back
+  const backButton = document.getElementById('backButton');
+  let returnTo = null;
+  function flash(el) {
+    el.classList.remove('flash');
+    void el.offsetWidth;
+    el.classList.add('flash');
+  }
+  document.querySelectorAll('a.jump').forEach(link => {
+    link.addEventListener('click', event => {
+      const target = document.querySelector(link.getAttribute('href'));
+      if (!target) return;
+      event.preventDefault();
+      returnTo = link;
+      const tall = target.offsetHeight > window.innerHeight * 0.7;
+      target.scrollIntoView({ behavior: 'smooth', block: tall ? 'start' : 'center' });
+      flash(target);
+      backButton.classList.add('show');
+    });
+  });
+  backButton.addEventListener('click', () => {
+    if (returnTo) {
+      returnTo.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const box = returnTo.closest('.node, .note, .summary') || returnTo;
+      flash(box);
+    }
+    returnTo = null;
+    backButton.classList.remove('show');
+  });
+}());
+</script>
+</body>
+</html>
